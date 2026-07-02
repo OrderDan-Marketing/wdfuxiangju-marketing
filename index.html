@@ -228,55 +228,6 @@
     margin-bottom:10px;
   }
 
-  /* ---- 結尾：整理與複製 ---- */
-  .finale{
-    background:var(--tea-deep);
-    border-radius:3px;
-    padding:36px 38px;
-    color:#F3EFE6;
-    scroll-margin-top:32px;
-  }
-  .finale h2{
-    font-family:'Noto Serif TC', serif;
-    font-size:21px;
-    font-weight:600;
-    margin-bottom:8px;
-  }
-  .finale p{
-    font-size:13.5px;
-    line-height:1.8;
-    color:rgba(243,239,230,.75);
-    margin-bottom:20px;
-  }
-  .finale .status{
-    font-size:13px;
-    color:var(--gold);
-    margin-bottom:18px;
-    letter-spacing:0.04em;
-  }
-  /* 按鈕：完整自包含樣式，避免優先級互相覆蓋 */
-  button.btn-copy{
-    font-family:'Noto Sans TC', sans-serif;
-    font-size:14.5px;
-    background-color:var(--gold);
-    color:#2A2620;
-    border:none;
-    border-radius:3px;
-    padding:14px 30px;
-    min-height:46px;
-    cursor:pointer;
-    font-weight:500;
-    letter-spacing:0.04em;
-  }
-  button.btn-copy:hover{ background-color:#C6A052; }
-  .copied-msg{
-    display:inline-block;
-    margin-left:14px;
-    font-size:13px;
-    color:#F3EFE6;
-    min-height:16px;
-  }
-
   /* ============ 手機版：單欄 ============ */
   @media (max-width:960px){
     .wrap{
@@ -411,13 +362,6 @@ function build(){
       field +
       '</section>';
   }
-  html += '<section class="finale" id="finale">' +
-    '<h2>完成，把回答傳給我們</h2>' +
-    '<p>按下方按鈕會把您全部的回答整理成一段文字並複製到剪貼簿，直接貼到 LINE 或訊息傳給我們即可。也可以直接截圖本頁。</p>' +
-    '<div class="status" id="finaleStatus">已完成 0 / 9 題</div>' +
-    '<button type="button" class="btn-copy" id="copyBtn">複製全部回答</button>' +
-    '<span class="copied-msg" id="copiedMsg"></span>' +
-    '</section>';
   mainEl.innerHTML = html;
 
   /* 左側導覽 */
@@ -426,7 +370,6 @@ function build(){
     toc += '<li><a href="#'+questions[k].id+'" data-toc="'+questions[k].id+'">'+
            '<span class="tick"></span><span>'+questions[k].step+'</span></a></li>';
   }
-  toc += '<li><a href="#finale" data-toc="finale"><span class="tick"></span><span>完成・複製回答</span></a></li>';
   tocEl.innerHTML = toc;
 }
 
@@ -447,7 +390,6 @@ mainEl.addEventListener('click', function(e){
     if(next){ setTimeout(function(){ next.scrollIntoView({behavior:'smooth', block:'start'}); }, 220); }
     return;
   }
-  if(e.target.id === 'copyBtn'){ copySummary(); }
 });
 
 mainEl.addEventListener('keydown', function(e){
@@ -469,8 +411,6 @@ function updateProgress(){
   var done = Object.keys(answers).length;
   var label = '已完成 '+done+' / '+questions.length+' 題';
   countEl.textContent = label;
-  var fs = document.getElementById('finaleStatus');
-  if(fs) fs.textContent = label;
   var links = tocEl.querySelectorAll('a[data-toc]');
   for(var i=0;i<links.length;i++){
     var id = links[i].dataset.toc;
@@ -492,34 +432,9 @@ var observer = new IntersectionObserver(function(entries){
   });
 }, { rootMargin:'-30% 0px -60% 0px' });
 
-/* ---- 複製 ---- */
-function copySummary(){
-  var text = '馥湘居｜網站策略訪談 回覆整理\n────────────────\n\n';
-  for(var i=0;i<questions.length;i++){
-    var q = questions[i];
-    var a = answers[q.id] && String(answers[q.id]).trim() !== '' ? answers[q.id] : '（未填寫）';
-    text += '【'+q.step+'】'+q.q+'\n→ '+a+'\n\n';
-  }
-  var msg = document.getElementById('copiedMsg');
-  function ok(){ if(msg){ msg.textContent = '已複製，直接貼上傳送即可'; setTimeout(function(){ if(msg) msg.textContent=''; }, 3000);} }
-  function fallback(){
-    var ta = document.createElement('textarea');
-    ta.value = text;
-    ta.style.position='fixed'; ta.style.opacity='0';
-    document.body.appendChild(ta);
-    ta.select();
-    try{ document.execCommand('copy'); ok(); }
-    catch(err){ if(msg) msg.textContent = '複製失敗，請截圖此頁'; }
-    document.body.removeChild(ta);
-  }
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(text).then(ok).catch(fallback);
-  } else { fallback(); }
-}
-
 build();
 updateProgress();
-var sections = document.querySelectorAll('.qcard, .finale');
+var sections = document.querySelectorAll('.qcard');
 for(var s=0;s<sections.length;s++){ observer.observe(sections[s]); }
 </script>
 </body>
