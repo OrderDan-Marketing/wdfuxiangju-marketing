@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>馥湘居 × 網站策略訪談</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+TC:wght@400;500;600;700&family=Noto+Sans+TC:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --paper:#F6F3ED;
+    --card:#FDFBF7;
+    --ink:#2A2620;
+    --ink-soft:#6B6558;
+    --tea:#55684A;
+    --tea-deep:#3E4E37;
+    --clay:#9C7A52;
+    --line:#E1D8C4;
+    --gold:#B4903F;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html,body{height:100%;}
+  body{
+    background:
+      radial-gradient(circle at 15% 8%, rgba(180,144,63,0.06), transparent 40%),
+      radial-gradient(circle at 85% 92%, rgba(85,104,74,0.07), transparent 45%),
+      var(--paper);
+    font-family:'Noto Sans TC', sans-serif;
+    color:var(--ink);
+    min-height:100vh;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    padding:32px 18px;
+  }
+
+  .stage{
+    width:100%;
+    max-width:640px;
+  }
+
+  /* header */
+  .brandbar{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:28px;
+    padding:0 4px;
+  }
+  .brandbar .mark{
+    font-family:'Noto Serif TC', serif;
+    font-weight:600;
+    font-size:15px;
+    letter-spacing:0.12em;
+    color:var(--tea-deep);
+  }
+  .brandbar .mark span{
+    color:var(--ink-soft);
+    font-weight:400;
+    font-size:12px;
+    letter-spacing:0.08em;
+  }
+
+  /* progress: tea cups filling */
+  .cups{
+    display:flex;
+    gap:8px;
+    padding:0 4px;
+  }
+  .cup{
+    width:22px; height:22px;
+    border-radius:0 0 7px 7px;
+    border:1.4px solid var(--clay);
+    position:relative;
+    background:transparent;
+    overflow:hidden;
+    flex:none;
+    transition:border-color .4s ease;
+  }
+  .cup::after{
+    content:'';
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:0%;
+    background:linear-gradient(180deg, var(--gold), var(--tea));
+    transition:height .5s cubic-bezier(.4,0,.2,1);
+  }
+  .cup.filled::after{ height:100%; }
+  .cup.current{ border-color:var(--gold); }
+
+  /* card */
+  .card{
+    background:var(--card);
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:52px 44px 40px;
+    position:relative;
+    box-shadow:0 1px 2px rgba(42,38,32,0.03), 0 12px 32px rgba(42,38,32,0.05);
+    min-height:420px;
+    display:flex;
+    flex-direction:column;
+  }
+  .card::before{
+    content:'';
+    position:absolute;
+    top:0; left:44px; right:44px;
+    height:1px;
+    background:linear-gradient(90deg, transparent, var(--gold), transparent);
+    opacity:.5;
+  }
+
+  .step-label{
+    font-size:11px;
+    letter-spacing:0.22em;
+    color:var(--clay);
+    text-transform:uppercase;
+    margin-bottom:18px;
+    font-weight:500;
+  }
+
+  .question{
+    font-family:'Noto Serif TC', serif;
+    font-weight:600;
+    font-size:23px;
+    line-height:1.55;
+    color:var(--ink);
+    margin-bottom:26px;
+  }
+
+  /* why box */
+  .why{
+    border-left:2px solid var(--gold);
+    padding:12px 18px;
+    margin-bottom:30px;
+    background:rgba(180,144,63,0.05);
+  }
+  .why .why-label{
+    font-size:11px;
+    letter-spacing:0.14em;
+    color:var(--tea-deep);
+    font-weight:600;
+    margin-bottom:5px;
+  }
+  .why .why-text{
+    font-size:13.5px;
+    line-height:1.75;
+    color:var(--ink-soft);
+  }
+
+  .field{ flex:1; margin-bottom:20px; }
+
+  .options{
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+  }
+  .opt{
+    border:1px solid var(--line);
+    background:#fff;
+    border-radius:2px;
+    padding:14px 16px;
+    font-size:14.5px;
+    color:var(--ink);
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    transition:border-color .2s, background .2s;
+  }
+  .opt:hover{ border-color:var(--clay); }
+  .opt .dot{
+    width:15px; height:15px;
+    border-radius:50%;
+    border:1.4px solid var(--clay);
+    flex:none;
+    position:relative;
+  }
+  .opt.selected{
+    border-color:var(--tea);
+    background:rgba(85,104,74,0.06);
+  }
+  .opt.selected .dot{ border-color:var(--tea); }
+  .opt.selected .dot::after{
+    content:'';
+    position:absolute;
+    inset:3px;
+    border-radius:50%;
+    background:var(--tea);
+  }
+
+  textarea{
+    width:100%;
+    min-height:120px;
+    border:1px solid var(--line);
+    border-radius:2px;
+    padding:14px 16px;
+    font-family:'Noto Sans TC', sans-serif;
+    font-size:14.5px;
+    line-height:1.7;
+    color:var(--ink);
+    background:#fff;
+    resize:vertical;
+  }
+  textarea:focus, .opt:focus-visible{
+    outline:2px solid var(--gold);
+    outline-offset:1px;
+  }
+  textarea::placeholder{ color:#B7B0A0; }
+
+  .optional-tag{
+    display:inline-block;
+    font-size:11px;
+    color:var(--ink-soft);
+    margin-bottom:12px;
+    letter-spacing:0.04em;
+  }
+
+  .nav{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    margin-top:auto;
+    padding-top:8px;
+  }
+  .nav button{
+    font-family:'Noto Sans TC', sans-serif;
+    font-size:13.5px;
+    letter-spacing:0.03em;
+    border:none;
+    background:none;
+    cursor:pointer;
+    padding:10px 4px;
+  }
+  .btn-back{
+    color:var(--ink-soft);
+  }
+  .btn-back:disabled{ opacity:0; pointer-events:none; }
+  .btn-next{
+    color:#fff;
+    background:var(--tea-deep);
+    padding:11px 26px;
+    border-radius:2px;
+    transition:background .2s, opacity .2s;
+  }
+  .btn-next:hover{ background:var(--tea); }
+  .btn-next:disabled{ opacity:.35; cursor:not-allowed; }
+
+  /* review screen */
+  .review-item{
+    padding:16px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .review-item:last-child{ border-bottom:none; }
+  .review-q{
+    font-size:12px;
+    color:var(--clay);
+    letter-spacing:0.04em;
+    margin-bottom:5px;
+  }
+  .review-a{
+    font-size:14.5px;
+    color:var(--ink);
+    line-height:1.6;
+    white-space:pre-wrap;
+  }
+  .review-a.empty{ color:#B7B0A0; font-style:italic; }
+
+  .review-actions{
+    display:flex;
+    gap:10px;
+    margin-top:26px;
+    flex-wrap:wrap;
+  }
+  .btn-copy{
+    background:var(--tea-deep);
+    color:#fff;
+    border:none;
+    padding:12px 22px;
+    border-radius:2px;
+    font-size:13.5px;
+    cursor:pointer;
+    letter-spacing:.02em;
+  }
+  .btn-copy:hover{ background:var(--tea); }
+  .btn-restart{
+    background:none;
+    border:1px solid var(--line);
+    color:var(--ink-soft);
+    padding:12px 22px;
+    border-radius:2px;
+    font-size:13.5px;
+    cursor:pointer;
+  }
+  .copied-msg{
+    font-size:12.5px;
+    color:var(--tea-deep);
+    margin-top:10px;
+    height:16px;
+  }
+
+  .intro-title{
+    font-family:'Noto Serif TC', serif;
+    font-weight:700;
+    font-size:26px;
+    line-height:1.5;
+    margin-bottom:16px;
+  }
+  .intro-body{
+    font-size:14.5px;
+    line-height:1.85;
+    color:var(--ink-soft);
+    margin-bottom:28px;
+  }
+
+  @media (max-width:520px){
+    .card{ padding:36px 24px 28px; min-height:0; }
+    .question{ font-size:20px; }
+    .intro-title{ font-size:22px; }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ transition:none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="stage">
+  <div class="brandbar">
+    <div class="mark">馥湘居 <span>× 網站策略訪談</span></div>
+    <div class="cups" id="cups"></div>
+  </div>
+
+  <div class="card" id="card"></div>
+</div>
+
+<script>
+const questions = [
+  {
+    type: 'intro'
+  },
+  {
+    step: '定位 01',
+    q: '目前這個網站，您希望對外主要傳達的是？',
+    why: '網站現在的文案偏向「茶室意境、品茗心境」，但我們了解到實際成交多半是大宗普洱茶批發。方向不同，接下來的網站架構跟 SEO 關鍵字策略會完全不一樣，這是所有調整的起點。',
+    type: 'single',
+    options: [
+      '茶室體驗／高端會員招募',
+      '普洱茶批發／原料供應',
+      '兩者都要，但比重不同',
+      '尚未確定，需要協助釐清'
+    ]
+  },
+  {
+    step: '定位 02',
+    q: '若兩者都要經營，網站上是否需要把「批發洽談」與「會員體驗」分開呈現？',
+    why: '批發採購方在意的是供應能力、規格、產能；品茗會員在意的是氛圍與體驗。兩種內容混在一起，容易讓兩邊訪客都找不到自己要的重點。',
+    type: 'single',
+    options: [
+      '需要，各自獨立頁面／動線',
+      '不用，同一套內容呈現即可',
+      '希望聽聽建議'
+    ]
+  },
+  {
+    step: '產品 01',
+    q: '目前普洱茶品項大致情形——共有幾款？年份、產地、規格（克重）大致如何？',
+    why: '網站目前完全沒有品項資訊，但同業電商站至少都會列出完整品項頁。這些資料越具體，之後的品項頁跟 SEO 文章才寫得出說服力，而不是空泛的形容詞。',
+    type: 'text',
+    placeholder: '例如：目前約有 5 款茶餅，年份從 2015～2023，多為 357g／400g 規格，主要產地為...'
+  },
+  {
+    step: '產品 02',
+    q: '是否有可對外公開的溯源證明、產地認證、獲獎紀錄，或曾配合過的品牌／通路（不方便透露名稱也可用類型描述）？',
+    why: 'B2B 高單價採購最看重的是信任背書。這類「實績佐證」，同業電商站普遍寫得很表面，如果您有實際資料，會是能做出差異化的地方。',
+    type: 'text',
+    placeholder: '例如：與 OO 連鎖飲料品牌長期配合、取得 OO 產地認證、曾獲 OO 獎項...',
+    optional: true
+  },
+  {
+    step: '客群 01',
+    q: '目前客戶主要是怎麼找到您、怎麼成交的？',
+    why: '若多數成交靠既有關係維繫，SEO 的急迫性跟投資報酬會不一樣；若陌生開發比重高，代表網站找不找得到、看不看得懂、留不留得住資訊，會直接影響成交轉換。',
+    type: 'single',
+    options: [
+      '靠熟人介紹／既有關係維繫',
+      '客戶主動上網搜尋找到我們',
+      '業務主動開發陌生客戶',
+      '以上皆有'
+    ]
+  },
+  {
+    step: '客群 02',
+    q: '客戶在成交前，是否會實地拜訪您的茶室或倉儲空間？',
+    why: '這會直接決定「地圖 SEO」這個方案值不值得投入——如果客戶不會實地到訪，地圖 SEO 的資源報酬率會很低，預算應該轉往其他 SEO 主題。',
+    type: 'single',
+    options: [
+      '會，多數客戶會現場看貨／喝茶',
+      '不會，多半線上或電話完成',
+      '兩種情況都有'
+    ]
+  },
+  {
+    step: '轉換路徑',
+    q: '目前有沒有讓客戶「詢價」或「留下聯絡方式」的固定管道？',
+    why: '目前網站上沒有任何詢價入口。就算 SEO 把流量帶進來，網站也留不住、轉不了單。這是網站結構調整裡最優先要補上的缺口。',
+    type: 'single',
+    options: [
+      '有，但不在網站上（例如 LINE／電話）',
+      '完全沒有固定管道',
+      '網站上已經有表單'
+    ]
+  },
+  {
+    step: '成效目標',
+    q: '接下來 3～6 個月，您最希望看到哪個具體改變？',
+    why: '這會決定 SEO 文章要優先寫哪個主題、以及用什麼指標衡量成效，避免文章寫了一堆，方向卻跟您真正想要的結果對不上。',
+    type: 'single',
+    options: [
+      '詢價／聯絡次數增加',
+      '品牌被更多同業、採購方認識',
+      '特定關鍵字（如「普洱茶批發」）排名提升',
+      '還沒想清楚，希望先討論'
+    ]
+  },
+  {
+    step: '執行節奏',
+    q: '執行時程與預算，您傾向哪一種做法？',
+    why: '幫助排定專案的優先順序，以及報價方案怎麼切分執行，避免討論時間都花在細節上，卻沒先對齊「要先做什麼」。',
+    type: 'single',
+    options: [
+      '先做一次性網站結構調整，SEO 後續再談',
+      '網站調整與 SEO 文章同時啟動',
+      '想先了解 24 萬／30 萬方案差異再決定'
+    ]
+  },
+  { type: 'review' }
+];
+
+let current = 0;
+const answers = new Array(questions.length).fill(null);
+const cardEl = document.getElementById('card');
+const cupsEl = document.getElementById('cups');
+
+function renderCups(){
+  cupsEl.innerHTML = '';
+  const total = questions.length - 2; // exclude intro & review
+  for(let i=0;i<total;i++){
+    const c = document.createElement('div');
+    c.className = 'cup';
+    if(i < current - 1 || current === questions.length -1) c.classList.add('filled');
+    if(i === current - 1) c.classList.add('current');
+    cupsEl.appendChild(c);
+  }
+}
+
+function render(){
+  renderCups();
+  const item = questions[current];
+  cardEl.innerHTML = '';
+  cardEl.style.opacity = 0;
+  cardEl.style.transform = 'translateY(6px)';
+
+  if(item.type === 'intro'){
+    cardEl.innerHTML = `
+      <div class="intro-title">在動筆之前，想先了解幾件事</div>
+      <div class="intro-body">
+        以下是根據目前網站與 SEO 討論整理出來的九個問題。每一題都會說明「為什麼問這題」——
+        這些回答會直接決定網站架構調整的優先順序，以及 SEO 文章要圍繞哪些主題撰寫。
+        大約需要 5 分鐘，可以先想想再回答，不用急。
+      </div>
+      <div class="nav" style="margin-top:auto;">
+        <button class="btn-back" disabled>上一步</button>
+        <button class="btn-next" id="next">開始 →</button>
+      </div>
+    `;
+    document.getElementById('next').onclick = () => go(1);
+
+  } else if(item.type === 'review'){
+    let html = `<div class="step-label">回顧</div>
+      <div class="question" style="margin-bottom:6px;">您的回答整理</div>
+      <div style="font-size:13px;color:var(--ink-soft);margin-bottom:22px;">確認無誤後，可複製整段文字傳給我們，或直接截圖。</div>
+      <div style="flex:1;overflow:auto;">`;
+    for(let i=1;i<questions.length-1;i++){
+      const q = questions[i];
+      const a = answers[i];
+      const displayA = (a && a.trim && a.trim() !== '') ? a : (a ? a : '（未填寫）');
+      html += `<div class="review-item">
+        <div class="review-q">${q.step}｜${q.q}</div>
+        <div class="review-a ${!a ? 'empty':''}">${escapeHtml(displayA)}</div>
+      </div>`;
+    }
+    html += `</div>
+      <div class="review-actions">
+        <button class="btn-copy" id="copyBtn">複製為文字</button>
+        <button class="btn-restart" id="restartBtn">重新填寫</button>
+      </div>
+      <div class="copied-msg" id="copiedMsg"></div>
+    `;
+    cardEl.innerHTML = html;
+    document.getElementById('copyBtn').onclick = copySummary;
+    document.getElementById('restartBtn').onclick = () => { answers.fill(null); current = 0; render(); };
+
+  } else {
+    const isSingle = item.type === 'single';
+    let fieldHtml = '';
+    if(isSingle){
+      fieldHtml = `<div class="options">${item.options.map((opt,idx)=>`
+        <div class="opt ${answers[current]===opt?'selected':''}" data-opt="${idx}" tabindex="0">
+          <span class="dot"></span><span>${opt}</span>
+        </div>`).join('')}</div>`;
+    } else {
+      fieldHtml = `${item.optional? '<div class="optional-tag">此題可略過</div>':''}
+        <textarea placeholder="${item.placeholder||'請輸入...'}">${answers[current]||''}</textarea>`;
+    }
+
+    cardEl.innerHTML = `
+      <div class="step-label">${item.step}</div>
+      <div class="question">${item.q}</div>
+      <div class="why">
+        <div class="why-label">為什麼問這題</div>
+        <div class="why-text">${item.why}</div>
+      </div>
+      <div class="field">${fieldHtml}</div>
+      <div class="nav">
+        <button class="btn-back" id="back">← 上一步</button>
+        <button class="btn-next" id="next">下一步 →</button>
+      </div>
+    `;
+
+    if(isSingle){
+      cardEl.querySelectorAll('.opt').forEach(el=>{
+        el.addEventListener('click', ()=>{
+          answers[current] = item.options[el.dataset.opt];
+          render();
+        });
+        el.addEventListener('keydown', (e)=>{
+          if(e.key==='Enter' || e.key===' '){ e.preventDefault(); el.click(); }
+        });
+      });
+    } else {
+      const ta = cardEl.querySelector('textarea');
+      ta.addEventListener('input', ()=>{ answers[current] = ta.value; updateNextState(); });
+    }
+
+    document.getElementById('back').onclick = () => go(-1);
+    document.getElementById('next').onclick = () => go(1);
+    updateNextState();
+  }
+
+  requestAnimationFrame(()=>{
+    cardEl.style.transition = 'opacity .35s ease, transform .35s ease';
+    cardEl.style.opacity = 1;
+    cardEl.style.transform = 'translateY(0)';
+  });
+}
+
+function updateNextState(){
+  const item = questions[current];
+  const nextBtn = document.getElementById('next');
+  if(!nextBtn) return;
+  if(item.type === 'single'){
+    nextBtn.disabled = !answers[current];
+  } else if(item.type === 'text'){
+    nextBtn.disabled = false; // text is soft-optional
+  }
+}
+
+function go(dir){
+  current += dir;
+  if(current < 0) current = 0;
+  render();
+}
+
+function escapeHtml(str){
+  const d = document.createElement('div');
+  d.textContent = str;
+  return d.innerHTML;
+}
+
+function copySummary(){
+  let text = '馥湘居｜網站策略訪談 回覆整理\n' + '─'.repeat(24) + '\n\n';
+  for(let i=1;i<questions.length-1;i++){
+    const q = questions[i];
+    const a = answers[i] && answers[i].trim() !== '' ? answers[i] : '（未填寫）';
+    text += `【${q.step}】${q.q}\n→ ${a}\n\n`;
+  }
+  navigator.clipboard.writeText(text).then(()=>{
+    document.getElementById('copiedMsg').textContent = '已複製到剪貼簿';
+    setTimeout(()=>{ const m=document.getElementById('copiedMsg'); if(m) m.textContent=''; }, 2500);
+  }).catch(()=>{
+    document.getElementById('copiedMsg').textContent = '複製失敗，請手動選取文字';
+  });
+}
+
+render();
+</script>
+</body>
+</html>
